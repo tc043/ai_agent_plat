@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Agent Sandbox - Orchestration & Visualization Platform with real-time reasoning, tool adapters, and blockchain integration">
+  <title>AI Agent Platform & Sandbox</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🔮</div>
+        <div>
+          <h1>Agent Sandbox</h1>
+          <span>AI Agent Platform v1.0</span>
+        </div>
+      </div>
+      <!-- Drawer for Tool Adapters -->
+      <div class="sidebar-drawer" id="tool-drawer">
+        <div class="drawer-header" onclick="toggleDrawer()">
+          <h3>Tool Adapters</h3>
+          <span class="drawer-arrow" id="drawer-arrow">▲</span>
+        </div>
+        <div class="drawer-content" id="tool-list-container">
+          <div id="tool-list"></div>
+        </div>
+      </div>
+
+      <!-- Stuck to Bottom -->
+      <div class="sidebar-bottom">
+        <div class="sidebar-section" style="border-top: 1px solid var(--border); padding-top: 12px;">
+          <h3>LLM Configuration</h3>
+          <div class="llm-config-panel">
+            <div class="form-group">
+              <label for="llm-provider">Provider</label>
+              <select id="llm-provider" onchange="onProviderChange()">
+                <option value="pollinations">Free Pollinations (Keyless)</option>
+                <option value="openai">OpenAI API</option>
+                <option value="gemini">Gemini API</option>
+                <option value="claude">Anthropic Claude</option>
+              </select>
+            </div>
+            <div class="form-group" id="api-key-group" style="display:none;">
+              <label for="llm-key">API Key</label>
+              <input type="password" id="llm-key" placeholder="Enter API key...">
+            </div>
+            <div class="form-group">
+              <label for="llm-model">Model Override (Optional)</label>
+              <input type="text" id="llm-model" placeholder="Default model">
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-section" style="border-top: 1px solid var(--border); padding-top: 12px; padding-bottom: 16px;">
+          <h3>Context Window</h3>
+          <div id="context-stats">
+            <div style="font-size:12px;color:var(--text-muted);">No active conversation</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+      <header class="header">
+        <div class="header-left">
+          <button class="btn" id="menu-toggle" style="display:none;">☰</button>
+          <h2>Agent Workspace</h2>
+          <div class="status-badge"><span class="status-dot"></span>Online</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn" id="trace-btn" onclick="toggleTrace()">📊 Traces</button>
+          <button class="btn" id="new-chat-btn" onclick="newChat()">✨ New Chat</button>
+        </div>
+      </header>
+
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <div class="chat-container">
+          <div class="messages" id="messages">
+            <!-- Welcome screen -->
+            <div class="welcome" id="welcome">
+              <div class="welcome-icon">🔮</div>
+              <h2>Welcome to the AI Agent Sandbox</h2>
+              <p>An AI agent orchestration platform with real-time reasoning visualization, tool adapters, and blockchain integration.</p>
+              <div class="welcome-cards">
+                <div class="welcome-card" onclick="sendQuery('What is the price of Bitcoin?')">
+                  <div class="card-icon">₿</div>
+                  <h4>Crypto Prices</h4>
+                  <p>Real-time cryptocurrency data</p>
+                </div>
+                <div class="welcome-card" onclick="sendQuery('Show me the crypto market overview')">
+                  <div class="card-icon">📊</div>
+                  <h4>Market Overview</h4>
+                  <p>Top coins & market trends</p>
+                </div>
+                <div class="welcome-card" onclick="sendQuery('Show mining statistics')">
+                  <div class="card-icon">⛏️</div>
+                  <h4>Mining Stats</h4>
+                  <p>Hashrate, difficulty & pools</p>
+                </div>
+                <div class="welcome-card" onclick="sendQuery('Calculate sqrt(144) * 2**10')">
+                  <div class="card-icon">🧮</div>
+                  <h4>Math Engine</h4>
+                  <p>Evaluate complex expressions</p>
+                </div>
+                <div class="welcome-card" onclick="sendQuery('Explore the latest Bitcoin block')">
+                  <div class="card-icon">⛓️</div>
+                  <h4>Block Explorer</h4>
+                  <p>Inspect blockchain blocks</p>
+                </div>
+                <div class="welcome-card" onclick="sendQuery('Run this Python code: print([x**2 for x in range(10)])')">
+                  <div class="card-icon">💻</div>
+                  <h4>Code Sandbox</h4>
+                  <p>Execute Python securely</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-area">
+            <div class="input-wrapper">
+              <textarea class="input-box" id="query-input" placeholder="Ask the agent anything..." rows="1"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitQuery();}"></textarea>
+              <button class="send-btn" id="send-btn" onclick="submitQuery()">→</button>
+            </div>
+            <div class="input-hints">
+              <span class="hint-chip" onclick="sendQuery('What is the price of Ethereum?')">ETH Price</span>
+              <span class="hint-chip" onclick="sendQuery('What are the trending coins?')">Trending</span>
+              <span class="hint-chip" onclick="sendQuery('Convert 1 BTC to satoshi')">BTC→Satoshi</span>
+              <span class="hint-chip" onclick="sendQuery('Hash hello world with sha256')">Hash Data</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trace Panel -->
+        <div class="trace-panel" id="trace-panel">
+          <div class="trace-header">
+            <h3>📊 Execution Traces</h3>
+            <button class="trace-close" onclick="toggleTrace()">✕</button>
+          </div>
+          <div class="trace-content" id="trace-content">
+            <div class="stats-grid" id="trace-stats"></div>
+            <h4 style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">WATERFALL</h4>
+            <div class="waterfall" id="trace-waterfall"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
