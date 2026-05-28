@@ -2,14 +2,6 @@
 
 A full-stack AI agent platform featuring **real-time reasoning visualization**, a **modular tool adapter system**, **context management**, **execution tracing**, and **blockchain/crypto integration** — built entirely from scratch with Python and vanilla JS.
 
-## Quick Start
-
-```bash
-cd agentflow
-chmod +x run.sh
-./run.sh
-# Open http://localhost:8000
-```
 
 ## Architecture
 
