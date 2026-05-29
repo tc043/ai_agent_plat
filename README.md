@@ -143,15 +143,24 @@ registry.register(
 
 ## Quick Start
 
-### Method 1: Local Virtual Environment (Shell Script)
-Simply run the startup script, which will automatically configure a Python virtual environment (`.venv`), install dependencies, and start the FastAPI server:
+### Method 1: Local Virtual Environment
+
+#### macOS / Linux
+Simply run the shell script, which will configure the Python virtual environment (`.venv`), install dependencies, and start the FastAPI server:
 ```bash
 ./run.sh
 ```
+
+#### Windows
+Run the batch file in Command Prompt or double-click it. It will set up the virtual environment, install requirements, and run the server:
+```cmd
+run.bat
+```
+
 The application will be available at [http://localhost:8000](http://localhost:8000).
 
-### Method 2: Docker Compose
-If you prefer running inside containers, use Docker Compose (with hot-reloading for development):
+### Method 2: Docker Compose (Cross-Platform)
+If you prefer running inside containers (works on Windows, macOS, and Linux), run:
 ```bash
 docker-compose up --build
 ```
