@@ -6,6 +6,12 @@
 let conversationId = null;
 let isStreaming = false;
 
+// Dynamically determine the base API URL to support local development and direct file loading
+const API_BASE = (window.location.protocol === 'file:' || window.location.hostname === '')
+  ? 'https://ai-agent-plat.onrender.com'
+  : '';
+
+
 // ─── Init ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadTools();
@@ -62,7 +68,7 @@ function onProviderChange() {
 // ─── Tools ─────────────────────────────────────────────
 async function loadTools() {
   try {
-    const resp = await fetch('https://ai-agent-plat.onrender.com/api/tools');
+    const resp = await fetch(`${API_BASE}/api/tools`);
     const tools = await resp.json();
     const container = document.getElementById('tool-list');
     const icons = { blockchain: '🔗', math: '🧮', code: '💻' };
@@ -134,7 +140,7 @@ async function submitQuery() {
   const model = document.getElementById('llm-model').value.trim() || null;
 
   try {
-    const resp = await fetch('https://ai-agent-plat.onrender.com/api/agent/stream', {
+    const resp = await fetch(`${API_BASE}/api/agent/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -273,7 +279,7 @@ function toggleTrace() {
 
 async function updateTracePanel(convId) {
   try {
-    const resp = await fetch(`https://ai-agent-plat.onrender.com/api/traces/${convId}`);
+    const resp = await fetch(`${API_BASE}/api/traces/${convId}`);
     const data = await resp.json();
 
     // Stats
@@ -308,7 +314,7 @@ async function updateTracePanel(convId) {
 
 async function updateContextStats(convId) {
   try {
-    const resp = await fetch(`https://ai-agent-plat.onrender.com/api/context/${convId}`);
+    const resp = await fetch(`${API_BASE}/api/context/${convId}`);
     const data = await resp.json();
     const s = data.stats;
     document.getElementById('context-stats').innerHTML = `

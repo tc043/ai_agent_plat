@@ -140,3 +140,20 @@ registry.register(
 - **Vanilla JavaScript** (ES6+) — no framework dependencies
 - **CSS3** with glassmorphism, animations, dark mode
 - **Coinpaprika API** for live crypto data
+
+## Quick Start
+
+### Method 1: Local Virtual Environment (Shell Script)
+Simply run the startup script, which will automatically configure a Python virtual environment (`.venv`), install dependencies, and start the FastAPI server:
+```bash
+./run.sh
+```
+The application will be available at [http://localhost:8000](http://localhost:8000).
+
+### Method 2: Docker Compose
+If you prefer running inside containers, use Docker Compose (with hot-reloading for development):
+```bash
+docker-compose up --build
+```
+The application will be available at [http://localhost:8000](http://localhost:8000).
+
